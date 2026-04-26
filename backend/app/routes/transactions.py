@@ -62,23 +62,43 @@ def analytics(user=Depends(get_current_user)):
     }
     
     
-    
 @router.get("/networth")
 def networth(user=Depends(get_current_user)):
     transactions = list(db.transactions.find({"user_id": user["user_id"]}))
     liabilities = list(db.liabilities.find({"user_id": user["user_id"]}))
+    assets = list(db.assets.find({"user_id": user["user_id"]}))
 
     income = sum(i["amount"] for i in transactions if i["type"] == "income")
     expense = sum(i["amount"] for i in transactions if i["type"] == "expense")
 
-    cash = income - expense
-    debt = sum(i["amount"] for i in liabilities)
+    cash_balance = income - expense
+    total_assets = sum(i.get("amount", 0) for i in assets)
+    total_liabilities = sum(i.get("amount", 0) for i in liabilities)
+
+    net_worth = cash_balance + total_assets - total_liabilities
 
     return {
-        "cash_balance": cash,
-        "total_liabilities": debt,
-        "net_worth": cash - debt
-    }
+        "cash_balance": cash_balance,
+        "tracked_assets": total_assets,
+        "total_liabilities": total_liabilities,
+        "net_worth": net_worth
+    }  
+# @router.get("/networth")
+# def networth(user=Depends(get_current_user)):
+#     transactions = list(db.transactions.find({"user_id": user["user_id"]}))
+#     liabilities = list(db.liabilities.find({"user_id": user["user_id"]}))
+
+#     income = sum(i["amount"] for i in transactions if i["type"] == "income")
+#     expense = sum(i["amount"] for i in transactions if i["type"] == "expense")
+
+#     cash = income - expense
+#     debt = sum(i["amount"] for i in liabilities)
+
+#     return {
+#         "cash_balance": cash,
+#         "total_liabilities": debt,
+#         "net_worth": cash - debt
+#     }
 
 
 @router.get("/summary")
