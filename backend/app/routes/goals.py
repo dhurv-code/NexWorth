@@ -1,3 +1,4 @@
+# Developed by DHURUV KUMAR GUPTA
 from fastapi import FastAPI, Depends, APIRouter
 from app.database import db
 from app.utils.auth import get_current_user

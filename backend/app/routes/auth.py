@@ -1,3 +1,4 @@
+# Developed by DHURUV KUMAR GUPTA
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 from app.database import db

@@ -1,3 +1,4 @@
+# Developed by DHURUV KUMAR GUPTA
 from fastapi import FastAPI
 from app.routes.transactions import router
 from app.routes.auth import router as auth_router

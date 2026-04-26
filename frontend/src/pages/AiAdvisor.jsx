@@ -120,7 +120,7 @@ export default function AiAdvisor() {
                   <CartesianGrid stroke="rgba(148,163,184,0.12)" vertical={false} />
                   <XAxis dataKey="name" stroke="#94a3b8" tickLine={false} axisLine={false} />
                   <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} tickFormatter={(v) => `${Math.round(v / 1000)}k`} />
-                  <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,.1)', borderRadius: 8 }} formatter={(v) => currency(v)} />
+                  <Tooltip contentStyle={{ background: 'grey', border: '1px solid rgba(255,255,255,.1)', borderRadius: 8 }} formatter={(v) => currency(v)} />
                   <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                     {amounts.map((entry, index) => <Cell key={entry.name} fill={colors[index % colors.length]} />)}
                   </Bar>

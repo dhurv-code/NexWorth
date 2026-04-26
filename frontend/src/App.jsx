@@ -10,9 +10,11 @@ import Login from './pages/Login.jsx'
 import Profile from './pages/Profile.jsx'
 import Register from './pages/Register.jsx'
 import Transactions from './pages/Transactions.jsx'
+import Footer from './components/Footer.jsx'
 
 export default function App() {
   return (
+    <>
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
@@ -32,6 +34,11 @@ export default function App() {
       </Route>
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      
     </Routes>
+    <Footer />
+    </>
+
+    
   )
 }

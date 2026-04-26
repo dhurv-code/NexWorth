@@ -177,4 +177,4 @@ MVP version completed and deployable.
 
 ## Author
 
-Built by Dhurv Gupta
+Built by Dhuruv Kumar Gupta
