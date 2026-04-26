@@ -9,6 +9,7 @@ from app.routes.ai_advisor import router as ai_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.assets import router as assets_router
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
