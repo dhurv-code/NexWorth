@@ -73,7 +73,7 @@ def networth(user=Depends(get_current_user)):
 
     cash_balance = income - expense
     total_assets = sum(i.get("amount", 0) for i in assets)
-    total_liabilities = sum(i.get("amount", 0) for i in liabilities)
+    total_liabilities = sum(i.get("remaining_amount", 0) for i in liabilities)
 
     net_worth = cash_balance + total_assets - total_liabilities
 

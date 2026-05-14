@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'
+// const API_BASE_URL = 'http://127.0.0.1:8000'
 const TOKEN_KEY = 'pig_token'
 const USER_KEY = 'pig_user'
 
@@ -69,6 +70,12 @@ export const liabilitiesApi = {
   add: (payload) => api.post('/liabilities/add', payload),
   update: (id, payload) => api.put(`/liabilities/update/${id}`, payload),
   remove: (id) => api.delete(`/liabilities/delete/${id}`),
+}
+
+export const loanPaymentsApi = {
+  pay: (loan_id, payload) => api.post(`/loan-payments/pay/${loan_id}`, payload),
+  history: (loan_id) => api.get(`/loan-payments/history/${loan_id}`),
+  safeBalance: () => api.get('/loan-payments/safe-balance'),
 }
 
 export const profileApi = {

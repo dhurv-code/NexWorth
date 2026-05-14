@@ -18,7 +18,7 @@ import Card from '../components/Card.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import MetricCard from '../components/MetricCard.jsx'
 import PageHeader from '../components/PageHeader.jsx'
-import { goalsApi, liabilitiesApi, transactionsApi } from '../services/api.js'
+import { goalsApi, liabilitiesApi, loanPaymentsApi, transactionsApi } from '../services/api.js'
 import { currency } from '../utils/formatters.js'
 
 const colors = ['#2dd4bf', '#60a5fa', '#f59e0b', '#fb7185', '#a78bfa']
@@ -29,21 +29,32 @@ export default function Dashboard() {
   const [analytics, setAnalytics] = useState({ category_expense: {}, monthly_flow: {} })
   const [goals, setGoals] = useState([])
   const [liabilities, setLiabilities] = useState([])
+  const [safeBalance, setSafeBalance] = useState({ current_balance: 0, upcoming_emi: 0, safe_to_spend: 0 })
 
-  useEffect(() => {
+  const loadDashboard = () => {
     Promise.all([
       transactionsApi.summary(),
       transactionsApi.networth(),
       transactionsApi.analytics(),
       goalsApi.all(),
       liabilitiesApi.all(),
-    ]).then(([summaryRes, networthRes, analyticsRes, goalsRes, liabilitiesRes]) => {
+      loanPaymentsApi.safeBalance(),
+    ]).then(([summaryRes, networthRes, analyticsRes, goalsRes, liabilitiesRes, safeBalanceRes]) => {
       setSummary(summaryRes.data)
       setNetworth(networthRes.data)
       setAnalytics(analyticsRes.data)
       setGoals(goalsRes.data)
       setLiabilities(liabilitiesRes.data)
+      setSafeBalance(safeBalanceRes.data)
     }).catch(() => {})
+  }
+
+  useEffect(() => {
+    loadDashboard()
+
+    const refreshHandler = () => loadDashboard()
+    window.addEventListener('financial-data-updated', refreshHandler)
+    return () => window.removeEventListener('financial-data-updated', refreshHandler)
   }, [])
 
   const monthlyFlow = useMemo(
@@ -57,7 +68,7 @@ export default function Dashboard() {
   )
 
   const goalTarget = goals.reduce((sum, goal) => sum + Number(goal.target_amount || goal.amount || 0), 0)
-  const debt = liabilities.reduce((sum, item) => sum + Number(item.amount || 0), 0)
+  const debt = liabilities.reduce((sum, item) => sum + Number(item.remaining_amount || item.amount || 0), 0)
 
   return (
     <>
@@ -68,6 +79,12 @@ export default function Dashboard() {
         <MetricCard icon={TrendingDown} label="Expenses" value={currency(summary.expense)} tone="rose" detail="Total recorded outflow" />
         <MetricCard icon={Wallet} label="Balance" value={currency(summary.balance)} tone="blue" detail="Available cash estimate" />
         <MetricCard icon={PiggyBank} label="Net worth" value={currency(networth.net_worth)} tone="amber" detail="Cash minus liabilities" />
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <MetricCard icon={Wallet} label="Safe balance" value={currency(safeBalance.current_balance)} tone="blue" detail="Available cash after obligations" />
+        <MetricCard icon={TrendingDown} label="Upcoming EMI" value={currency(safeBalance.upcoming_emi)} tone="rose" detail="Next due payment" />
+        <MetricCard icon={PiggyBank} label="Safe to spend" value={currency(safeBalance.safe_to_spend)} tone="teal" detail="Cash available after EMI" />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.6fr_1fr]">

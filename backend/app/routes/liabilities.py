@@ -2,13 +2,24 @@ from fastapi import APIRouter, Depends
 from app.database import db
 from app.utils.auth import get_current_user
 from bson.objectid import ObjectId
+from app.model.liability_model import LiabilityModel
 
 router = APIRouter()
 
 @router.post("/add")
 def add_liability(data: dict, user=Depends(get_current_user)):
+
     data["user_id"] = user["user_id"]
+
+    # Initialize loan tracking fields
+    data["paid_amount"] = 0
+
+    data["remaining_amount"] = data["principal_amount"]
+
+    data["status"] = "active"
+
     db.liabilities.insert_one(data)
+
     return {"message": "Liability added"}
 
 @router.get("/all")

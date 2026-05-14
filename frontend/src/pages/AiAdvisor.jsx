@@ -58,7 +58,11 @@ export default function AiAdvisor() {
   }
 
   useEffect(() => {
-    fetchPlan()
+    const loadPlan = async () => {
+      await fetchPlan()
+    }
+
+    loadPlan()
   }, [])
 
   const summary = useMemo(() => {

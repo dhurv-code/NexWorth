@@ -9,7 +9,9 @@ from app.routes.ai_advisor import router as ai_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.assets import router as assets_router
 from dotenv import load_dotenv
+from app.routes.loan_payments import router as loan_payments_router
 import os
+
 
 load_dotenv()
 
@@ -33,6 +35,7 @@ app.include_router(liability_router,prefix="/liabilities",tags=["liabilities"])
 app.include_router(profile_router, prefix="/profile", tags=["Profile"])
 app.include_router(ai_router, prefix="/ai",tags=["AI advisor"])
 app.include_router(assets_router,prefix="/assets",tags=["Assets"])
+app.include_router(loan_payments_router,prefix="/loan-payments",tags=["loan payments"])
 
 
 
