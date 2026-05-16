@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.assets import router as assets_router
 from dotenv import load_dotenv
 from app.routes.loan_payments import router as loan_payments_router
+from app.routes import password_reset
 import os
 
 
@@ -36,7 +37,7 @@ app.include_router(profile_router, prefix="/profile", tags=["Profile"])
 app.include_router(ai_router, prefix="/ai",tags=["AI advisor"])
 app.include_router(assets_router,prefix="/assets",tags=["Assets"])
 app.include_router(loan_payments_router,prefix="/loan-payments",tags=["loan payments"])
-
+app.include_router(password_reset.router,prefix="/auth",tags=["Password Reset"])
 
 
 @app.get("/")
