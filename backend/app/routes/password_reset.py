@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from app.database import db
 from itsdangerous import URLSafeTimedSerializer
 from passlib.hash import bcrypt
+import resend
 import os
 
 router = APIRouter()
@@ -10,6 +11,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
 
 serializer = URLSafeTimedSerializer(SECRET_KEY)
 
+resend.api_key = os.getenv(
+    "RESEND_API_KEY"
+)
 
 
 @router.post("/forgot-password")
@@ -28,9 +32,24 @@ def forgot_password(data: dict):
     token = serializer.dumps(email)
 
     reset_link = (
-        f"https://nex-worth.vercel.app/"
-        f"reset-password?token={token}"
-    )
+    f"{os.getenv('FRONTEND_URL')}"
+    f"/reset-password?token={token}"
+)
+
+    resend.Emails.send({
+    "from": "onboarding@resend.dev",
+    "to": email,
+    "subject":"Reset NexWorth Password",
+    "html": f"""
+    <h2>Password Reset</h2>
+
+    <p>Click below:</p>
+
+    <a href="{reset_link}">
+    Reset Password
+    </a>
+    """
+})
 
     # temporary
     print(reset_link)
