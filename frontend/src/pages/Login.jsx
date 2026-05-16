@@ -50,6 +50,9 @@ export default function Login() {
           placeholder="Your password"
           required
         />
+        <div className="text-right text-sm">
+          <Link className="font-semibold text-teal-300 hover:text-teal-200" to="/forgot-password">Forgot Password?</Link>
+        </div>
         {error ? <p className="rounded-lg border border-rose-400/20 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">{error}</p> : null}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? <Loader2 size={17} className="animate-spin" /> : <ArrowRight size={17} />}
